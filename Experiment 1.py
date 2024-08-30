@@ -14,6 +14,7 @@ import numpy as np
 import seaborn as sns
 
 
+#defining the annular dataset via make_circles
 
 n_samples_outer = 500
 n_samples_inner = 500
@@ -44,7 +45,7 @@ X_inner = X_inner*factor_0
 X2 = np.concatenate((X_outer_2,X_outer, X_inner))
 y2 = np.concatenate((y_outer_2,y_outer, y_inner)) 
 
-
+#splitting into training and testing
 X_train, X_test, y_train, y_test = train_test_split(X2, y2, stratify=y2, random_state=0)
 
 
@@ -53,7 +54,6 @@ plt.scatter(X2[:, 0], X2[:, 1], c=y2, cmap=plt.cm.Paired)
 plt.title('Dataset 1')
 plt.xlim([-4,4])
 plt.ylim([-4,4])
-
 plt.tight_layout()
 plt.show()
 
@@ -74,6 +74,8 @@ def gaussian_kernel(X, Y, sigma=1.0):
     
     return kernel_matrix
 
+
+#Defining the first 6 fock state displacement kernels analytically with bandwidth parameter sigma
 
 def displacement_kernel(sigma):
     def displacement(X,Y):
@@ -146,7 +148,7 @@ def displacement_kernel_6(sigma):
 
 
 
-
+#Defining the kernels we wish to test
 svm_classifier_custom_kernel_1 = SVC(kernel=displacement_kernel(sigma=1))
 svm_classifier_custom_kernel_2 = SVC(kernel=displacement_kernel_2(sigma = 1))
 svm_classifier_custom_kernel_3 = SVC(kernel=displacement_kernel_3(sigma = 1))
@@ -164,7 +166,7 @@ svm_classifier_custom_kernel_gaussian_untuned.fit(X_train, y_train)
 svm_classifier_custom_kernel_4.fit(X_train, y_train)
 svm_classifier_custom_kernel_sigmoid.fit(X_train, y_train)
 
-
+# Using the fitted kernels to predict labels on the test set
 y_pred_custom_kernel_1 = svm_classifier_custom_kernel_1.predict(X_test)
 y_pred_custom_kernel_2 = svm_classifier_custom_kernel_2.predict(X_test)
 y_pred_custom_kernel_3 = svm_classifier_custom_kernel_3.predict(X_test)
@@ -173,7 +175,7 @@ y_pred_custom_kernel_gaussian_untuned = svm_classifier_custom_kernel_gaussian_un
 y_pred_custom_kernel_4 = svm_classifier_custom_kernel_4.predict(X_test)
 y_pred_custom_kernel_sig = svm_classifier_custom_kernel_sigmoid.predict(X_test)
 
-
+#printing classification accuracy
 print("Classification Accuracy with 1 Kernel:", accuracy_score(y_test, y_pred_custom_kernel_1))
 print("Classification Accuracy with 2 Kernel:", accuracy_score(y_test, y_pred_custom_kernel_2))
 print("Classification Accuracy with 3 Kernel:", accuracy_score(y_test, y_pred_custom_kernel_3))
@@ -194,7 +196,6 @@ xx, yy = np.meshgrid(np.linspace(-2.5, 2.5, 200), np.linspace(-2.5, 2.5, 200))
 kerns = [svm_classifier_custom_kernel_1, svm_classifier_custom_kernel_2, svm_classifier_custom_kernel_3, svm_classifier_custom_kernel_gaussian_untuned, svm_classifier_custom_kernel_gaussian]
 names = ['n=1', 'n=2', 'n=3', 'Gaussian (Untuned)', 'Gaussian (Tuned)']
 accs = [accuracy_score(y_test, y_pred_custom_kernel_2), accuracy_score(y_test, y_pred_custom_kernel_3), accuracy_score(y_test, y_pred_custom_kernel_4), accuracy_score(y_test, y_pred_custom_kernel_gaussian_untuned), accuracy_score(y_test, y_pred_custom_kernel_gaussian)]
-import os
 
 
 # Create a directory named "Experiment_1" in the same folder as the Python script

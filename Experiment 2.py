@@ -85,11 +85,13 @@ def gaussian_kernel(X, Y, sigma=1.0):
     return kernel_matrix
 
 
+
+#Defining the first 6 fock state displacement kernels analytically with bandwidth parameter sigma
+
 def displacement_kernel(sigma):
     def displacement(X,Y):
         pairwise_distances_sq = np.sum(X**2, axis=1, keepdims=True) - 2 * np.dot(X, Y.T) + np.sum(Y**2, axis=1, keepdims=True).T
-        # print(pairwise_distances_sq)
-        # Compute the Gaussian kernel matrix
+
         kernel_matrix = np.exp(-sigma**2*pairwise_distances_sq )
         
         kernel_matrix *= (sigma**2*pairwise_distances_sq - 1)**2
@@ -97,13 +99,11 @@ def displacement_kernel(sigma):
         return kernel_matrix
     return displacement
 
-#if sigma is 0.5 then rank 2 becomes the exact same as rank 1 
 
 def displacement_kernel_2(sigma):
     def displacement(X,Y):
         pairwise_distances_sq = np.sum(X**2, axis=1, keepdims=True) - 2 * np.dot(X, Y.T) + np.sum(Y**2, axis=1, keepdims=True).T
-        # print(pairwise_distances_sq)
-        # Compute the Gaussian kernel matrix
+        
         kernel_matrix = np.exp(-sigma**2*pairwise_distances_sq)/4
         
         kernel_matrix *= (2- sigma**2*4*pairwise_distances_sq + sigma**4*pairwise_distances_sq**2)**2
@@ -115,8 +115,7 @@ def displacement_kernel_2(sigma):
 def displacement_kernel_3(sigma):
     def displacement(X,Y):
         pairwise_distances_sq = np.sum(X**2, axis=1, keepdims=True) - 2 * np.dot(X, Y.T) + np.sum(Y**2, axis=1, keepdims=True).T
-        # print(pairwise_distances_sq)
-        # Compute the Gaussian kernel matrix
+
         kernel_matrix = np.exp(-sigma**2*pairwise_distances_sq)/36
         
         kernel_matrix *= (-6 + sigma**2*18*pairwise_distances_sq - sigma**4*9*pairwise_distances_sq**2 + sigma**6*pairwise_distances_sq**3)**2
@@ -128,8 +127,7 @@ def displacement_kernel_3(sigma):
 def displacement_kernel_4(sigma):
     def displacement(X,Y):
         pairwise_distances_sq = np.sum(X**2, axis=1, keepdims=True) - 2 * np.dot(X, Y.T) + np.sum(Y**2, axis=1, keepdims=True).T
-        # print(pairwise_distances_sq)
-        # Compute the Gaussian kernel matrix
+
         kernel_matrix = np.exp(-sigma**2*pairwise_distances_sq)/576
         
         kernel_matrix *= (24 - sigma**2*96*pairwise_distances_sq + sigma**4*72*pairwise_distances_sq**2 - sigma**6*16*pairwise_distances_sq**3 + sigma**8*pairwise_distances_sq**4)**2
@@ -140,8 +138,7 @@ def displacement_kernel_4(sigma):
 def displacement_kernel_5(sigma):
     def displacement(X,Y):
         pairwise_distances_sq = np.sum(X**2, axis=1, keepdims=True) - 2 * np.dot(X, Y.T) + np.sum(Y**2, axis=1, keepdims=True).T
-        # print(pairwise_distances_sq)
-        # Compute the Gaussian kernel matrix
+
         kernel_matrix = np.exp(-sigma**2*pairwise_distances_sq)/14400
         
         kernel_matrix *= (-120 + sigma**2*600*pairwise_distances_sq - sigma**4*600*pairwise_distances_sq**2 + sigma**6*200*pairwise_distances_sq**3 - sigma**8*25*pairwise_distances_sq**4 + sigma**10*1*pairwise_distances_sq**5)**2
@@ -152,14 +149,14 @@ def displacement_kernel_5(sigma):
 def displacement_kernel_6(sigma):
     def displacement(X,Y):
         pairwise_distances_sq = np.sum(X**2, axis=1, keepdims=True) - 2 * np.dot(X, Y.T) + np.sum(Y**2, axis=1, keepdims=True).T
-        # print(pairwise_distances_sq)
-        # Compute the Gaussian kernel matrix
+
         kernel_matrix = np.exp(-sigma**2*pairwise_distances_sq)/518400
         
         kernel_matrix *= (720 - sigma**2*4320*pairwise_distances_sq + sigma**4*5400*pairwise_distances_sq**2 - sigma**6*2400*pairwise_distances_sq**3 + sigma**8*450*pairwise_distances_sq**4 - sigma**10*36*pairwise_distances_sq**5+ sigma**12*1*pairwise_distances_sq**6)**2
 
         return kernel_matrix
     return displacement
+
 
 
 
@@ -210,8 +207,6 @@ xx, yy = np.meshgrid(np.linspace(-2.5, 2.5, 200), np.linspace(-2.5, 2.5, 200))
 kerns = [svm_classifier_custom_kernel_2, svm_classifier_custom_kernel_3, svm_classifier_custom_kernel_4, svm_classifier_custom_kernel_gaussian_untuned, svm_classifier_custom_kernel_gaussian]
 names = ['n=2', 'n=3', 'n=4', 'Gaussian (Untuned)', 'Gaussian (Tuned)']
 accs = [accuracy_score(y_test, y_pred_custom_kernel_2), accuracy_score(y_test, y_pred_custom_kernel_3), accuracy_score(y_test, y_pred_custom_kernel_4), accuracy_score(y_test, y_pred_custom_kernel_gaussian_untuned), accuracy_score(y_test, y_pred_custom_kernel_gaussian)]
-import os
-
 
 # Create a directory named "Experiment_1" in the same folder as the Python script
 save_dir = os.path.join(os.path.dirname(__file__), "Experiment_2")
